@@ -6,7 +6,7 @@ from os import getenv
 from time import sleep
 
 bot = commands.Bot(command_prefix='d!')
-client = discord.Client()
+bot.debug = False
 
 
 @bot.event
@@ -19,10 +19,10 @@ async def on_ready():
 async def on_message(message):
     if(message.author == bot.user):
         return
-    if(randint(0, 900) == 1):
-        bot.msg = await message.reply("You have mail", mention_author=True)
+    if((randint(0, 90) == 1 or bot.debug) and message.guild and not message.content.startswith('d!')):
+        msg = await message.reply("You have mail", mention_author=True)
         bot.reactionAuthor = message.author
-        await bot.msg.add_reaction('\U0001F4EC')
+        await msg.add_reaction('\U0001F4EC')
     await bot.process_commands(message)
 
 
@@ -32,7 +32,14 @@ async def on_reaction_add(reaction, user):
         return
     if(str(reaction) == '\U0001F4EC' and bot.reactionAuthor.id == user.id):
         await user.send("Your mail is: ||DEEZ NUTS||")
-        await bot.msg.delete()
+        await reaction.message.delete()
+
+
+@bot.command(name="debug", brief="turns on debug mode")
+@commands.is_owner()
+async def debug(ctx):
+    bot.debug = not bot.debug
+    await ctx.send("Debug: "+str(bot.debug))
 
 load_dotenv()
 bot.run(getenv('TOKEN'))
