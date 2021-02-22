@@ -3,7 +3,6 @@ from random import randint
 from discord.ext import commands
 from dotenv import load_dotenv
 from os import getenv
-from time import sleep
 
 bot = commands.Bot(command_prefix='d!')
 bot.debug = False
@@ -40,6 +39,12 @@ async def on_reaction_add(reaction, user):
 async def debug(ctx):
     bot.debug = not bot.debug
     await ctx.send("Debug: "+str(bot.debug))
+
+
+@bot.command(name="src", brief="Returns link to source code")
+async def src(ctx):
+    await ctx.send("https://github.com/PopsicleTreehouse/DeezNutsBot")
+
 
 load_dotenv()
 bot.run(getenv('TOKEN'))
