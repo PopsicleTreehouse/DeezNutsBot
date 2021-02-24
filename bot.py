@@ -34,8 +34,8 @@ async def on_reaction_add(reaction, user):
         await reaction.message.delete()
 
 
-@bot.command(name="debug", brief="turns on debug mode")
-@commands.is_owner()
+@bot.command()
+@commands.has_permissions(administrator=True)
 async def debug(ctx):
     bot.debug = not bot.debug
     await ctx.send("Debug: "+str(bot.debug))
